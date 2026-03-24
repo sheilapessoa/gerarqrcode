@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code para Mesas do Cardápio Sheets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        dark: '#1e293b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-primary mb-3">Gerador de QR Code para Mesas do Cardápio Sheets</h1>
+            <p class="text-lg text-gray-600">Gere QR Codes para as mesas do seu restaurante integrados com o Cardápio Sheets de forma rápida e fácil</p>
+        </header>
+
+        <main class="space-y-10">
+            <section class="bg-white rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl">
+                <div class="mb-6">
+                    <label for="url-base" class="block text-sm font-medium text-gray-700 mb-2">URL Base do Cardápio:</label>
+                    <input type="text" id="url-base" placeholder="https://seudominio.com/cardapio" value="https://seudominio.com/cardapio" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Entrada:</label>
+                    <div class="flex flex-wrap gap-6 mt-2">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="input-type" value="range" checked class="h-5 w-5 text-primary focus:ring-primary">
+                            <span class="ml-2 text-gray-700">Faixa de Mesas</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="input-type" value="list" class="h-5 w-5 text-primary focus:ring-primary">
+                            <span class="ml-2 text-gray-700">Lista Personalizada</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="range-input" class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="start-range" class="block text-sm font-medium text-gray-700 mb-2">Mesa Inicial:</label>
+                            <input type="number" id="start-range" min="1" value="1" 
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200">
+                        </div>
+                        <div>
+                            <label for="end-range" class="block text-sm font-medium text-gray-700 mb-2">Mesa Final:</label>
+                            <input type="number" id="end-range" min="1" value="10" 
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="list-input" class="mb-6 hidden">
+                    <label for="custom-list" class="block text-sm font-medium text-gray-700 mb-2">Lista de Mesas (separadas por vírgula):</label>
+                    <input type="text" id="custom-list" placeholder="1, 3, 5, 8, 10" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200">
+                </div>
+
+                <div>
+                    <button id="generate-btn" 
+                        class="w-full bg-primary hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Gerar QR Codes
+                    </button>
+                </div>
+            </section>
+
+            <section id="qr-preview" class="hidden bg-white rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">QR Codes Gerados</h2>
+                <div id="qr-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8"></div>
+                <div class="text-center">
+                    <button id="download-btn" 
+                        class="bg-secondary hover:bg-green-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary inline-flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Baixar ZIP
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <div class="mt-16"></div>
+    </div>
+    
+    <footer class="w-full text-center text-white border-t border-blue-200 pt-6 mt-16 bg-blue-800">
+      
+    </footer>
+
+    <!-- Scripts -->
+    <script src="libs/qrcode.min.js"></script>
+    <script src="libs/jszip.min.js"></script>
+    <script src="libs/FileSaver.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
